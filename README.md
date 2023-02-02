@@ -6,7 +6,7 @@ YAML manipulator CLI
 ## Install
 
 ```bash
-go install github.com/shubham1172/ym
+go install github.com/shubham1172/ym@latest
 ```
 
 ## Example

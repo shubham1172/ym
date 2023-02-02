@@ -34,7 +34,7 @@ type YmOperation struct {
 // and the output file to write the results to.
 type YmEntry struct {
 	Input      string        `yaml:"input"`
-	Output     string        `yaml:output,omitempty`
+	Output     string        `yaml:"output,omitempty"`
 	Operations []YmOperation `yaml:"operations"`
 }
 
@@ -53,9 +53,7 @@ func process(opsFilePath string, entries []YmEntry) error {
 // writes the results to the output file, and returns an error if any.
 func processEntry(opsFilePath string, entry YmEntry) error {
 	// If entry.File is not absolute, use it as a relative path to the operations file.
-	if !filepath.IsAbs(entry.Input) {
-		entry.Input = filepath.Join(filepath.Dir(opsFilePath), entry.Input)
-	}
+	entry.Input = getPath(opsFilePath, entry.Input)
 	data, err := os.ReadFile(entry.Input)
 	if err != nil {
 		return fmt.Errorf("error reading file %s: %v", entry.Input, err)
@@ -92,6 +90,17 @@ func processEntry(opsFilePath string, entry YmEntry) error {
 	if entry.Output == "" {
 		log.Printf("[WARN] No output file specified, input file will be overwritten")
 		entry.Output = entry.Input
+	} else {
+		entry.Output = getPath(opsFilePath, entry.Output)
 	}
 	return os.WriteFile(entry.Output, []byte(s), 0644)
+}
+
+// getPath returns the filePath as an absolute path.
+// If filePath is relative, it's resolved relative to the opsFilePath.
+func getPath(opsFilePath string, filePath string) string {
+	if filepath.IsAbs(filePath) {
+		return filePath
+	}
+	return filepath.Join(filepath.Dir(opsFilePath), filePath)
 }
