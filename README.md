@@ -3,6 +3,12 @@ YAML manipulator CLI
 
 `ym` is a CLI tool to manipulate YAML files. It allows you to define a set of operations to apply to a YAML file and execute them.
 
+## Install
+
+```bash
+go install github.com/shubham1172/ym
+```
+
 ## Example
 
 If you have a `foo.yaml` file with the following content:
@@ -57,3 +63,7 @@ people:
       - name: Jill
         age: 8
 ```
+
+## Credits
+
+This project uses https://github.com/mikefarah/yq for YAML manipulation.
