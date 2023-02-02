@@ -1,0 +1,14 @@
+- file: foo.yaml
+  operations:
+    - op: replace
+      path: people[0].age
+      value: 43
+    - op: add
+      path: people[1].children
+      value:
+        - name: Jack
+          age: 10
+        - name: Jill
+          age: 8
+    - op: remove
+      path: people[2]

@@ -1,0 +1,7 @@
+people:
+  - name: John
+    age: 42
+  - name: Jane
+    age: 36
+  - name: Judy
+    age: 34
