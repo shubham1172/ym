@@ -52,9 +52,7 @@ func process(opsFilePath string, entries []YmEntry) error {
 // processEntry takes a single YmEntry, applies the operations to the file,
 // writes the results to the output file, and returns an error if any.
 func processEntry(opsFilePath string, entry YmEntry) error {
-	// If entry.File is not absolute, use it as a relative path to the operations file.
-	entry.Input = getPath(opsFilePath, entry.Input)
-	data, err := os.ReadFile(entry.Input)
+	data, err := os.ReadFile(getPath(opsFilePath, entry.Input))
 	if err != nil {
 		return fmt.Errorf("error reading file %s: %v", entry.Input, err)
 	}
@@ -90,10 +88,8 @@ func processEntry(opsFilePath string, entry YmEntry) error {
 	if entry.Output == "" {
 		log.Printf("[WARN] No output file specified, input file will be overwritten")
 		entry.Output = entry.Input
-	} else {
-		entry.Output = getPath(opsFilePath, entry.Output)
 	}
-	return os.WriteFile(entry.Output, []byte(s), 0644)
+	return os.WriteFile(getPath(opsFilePath, entry.Output), []byte(s), 0644)
 }
 
 // getPath returns the filePath as an absolute path.
@@ -102,5 +98,10 @@ func getPath(opsFilePath string, filePath string) string {
 	if filepath.IsAbs(filePath) {
 		return filePath
 	}
-	return filepath.Join(filepath.Dir(opsFilePath), filePath)
+	absPath, err := filepath.Abs(filepath.Dir(opsFilePath))
+	if err != nil {
+		return filepath.Join(filepath.Dir(opsFilePath), filePath)
+	} else {
+		return filepath.Join(absPath, filePath)
+	}
 }
