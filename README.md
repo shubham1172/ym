@@ -20,19 +20,20 @@ people:
 Create a file `ops.yaml` with the following content:
 
 ```yaml
-- file: foo.yaml # The file to apply the operations to, relative to the current directory.
+- input: foo.yaml # The file to apply the operations to, relative to the current directory.
+  output: generated-foo.yaml # If this is not set, the file will be updated in place.
   operations:
-    - op: replace
+    - op: update
       path: .people[0].age # Follows a yq style path.
       value: 43
-    - op: add
+    - op: update
       path: .people[1].children
       value:
         - name: Jack
           age: 10
         - name: Jill
           age: 8
-    - op: remove
+    - op: delete
       path: .people[2]
 ```
 

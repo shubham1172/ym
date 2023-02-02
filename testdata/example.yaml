@@ -1,0 +1,15 @@
+- input: foo.yaml
+  output: generated-foo.yaml
+  operations:
+    - op: update
+      path: .people[0].age
+      value: 43
+    - op: update
+      path: .people[1].children
+      value:
+        - name: Jack
+          age: 10
+        - name: Jill
+          age: 8
+    - op: delete
+      path: .people[2]
