@@ -46,7 +46,10 @@ Create a file `ops.yaml` with the following content:
 Then run `ym`:
 
 ```bash
-ym -f ops.yaml
+# Run ym with the ops.yaml file.
+ym -file ops.yaml
+# Or, pipe the ops.yaml file to ym.
+cat ops.yaml | ym
 ```
 
 The `foo.yaml` file will be updated to:

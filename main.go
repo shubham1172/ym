@@ -21,17 +21,27 @@ func parseConfiguration(data []byte) ([]YmEntry, error) {
 	return entries, nil
 }
 
+// getFileContent returns the contents of a file.
+// If the file is not provided, it will try to read from stdin.
+func getFileContent(f string) ([]byte, error) {
+	if f == "" {
+		fi, err := os.Stdin.Stat()
+		// Check if stdin is a pipe or a terminal
+		if err != nil || (fi.Mode()&os.ModeCharDevice) != 0 {
+			flag.Usage()
+			os.Exit(1)
+		}
+		return io.ReadAll(os.Stdin)
+	}
+	return os.ReadFile(f)
+}
+
 func main() {
 	var file string
-	flag.StringVar(&file, "file", "", "path to the operations file")
+	flag.StringVar(&file, "file", "", "path to the operations file (or specify via stdin)")
 	flag.Parse()
 
-	if file == "" {
-		flag.Usage()
-		os.Exit(1)
-	}
-
-	data, err := os.ReadFile(file)
+	data, err := getFileContent(file)
 	if err != nil {
 		log.Fatalf("error reading file: %v", err)
 	}
